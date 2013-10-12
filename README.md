@@ -4,6 +4,10 @@
 gignx
 =====
 
+## Workflow
+### Git
+https://wiki.diasporafoundation.org/Git_Workflow
+
 ## Sources
 ### howto
 - http://www.linuxuser.co.uk/tutorials/build-extensions-for-the-gnome-desktop-environment
