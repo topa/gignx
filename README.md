@@ -1,4 +1,6 @@
 [![Stories in Ready](https://badge.waffle.io/topa/gignx.png?label=ready)](https://waffle.io/topa/gignx)  
+[burndown-chart](http://topa.github.io/gignx/burndown-chart/burndown-chart.html#!/topa/gignx)
+
 gignx
 =====
 
