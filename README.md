@@ -7,6 +7,7 @@ gignx
 ## Workflow
 ### Git
 https://wiki.diasporafoundation.org/Git_Workflow
+http://git-scm.com/book/en/Git-Tools-Submodules
 
 ## Sources
 ### howto
