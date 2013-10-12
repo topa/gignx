@@ -1,3 +1,4 @@
+[![Stories in Ready](https://badge.waffle.io/topa/gignx.png?label=ready)](https://waffle.io/topa/gignx)  
 gignx
 =====
 
