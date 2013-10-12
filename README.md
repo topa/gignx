@@ -4,6 +4,6 @@ gignx
 
 ## Sources
 ### howto
-http://www.linuxuser.co.uk/tutorials/build-extensions-for-the-gnome-desktop-environment
-https://wiki.gnome.org/GnomeShell/Extensions/StepByStepTutorial
-http://stackoverflow.com/questions/13107743/documentation-for-writing-gnome-shell-extensions
+- http://www.linuxuser.co.uk/tutorials/build-extensions-for-the-gnome-desktop-environment
+- https://wiki.gnome.org/GnomeShell/Extensions/StepByStepTutorial
+- http://stackoverflow.com/questions/13107743/documentation-for-writing-gnome-shell-extensions
