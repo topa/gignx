@@ -18,6 +18,9 @@ gignx
 - http://stackoverflow.com/questions/13107743/documentation-for-writing-gnome-shell-extensions
 - http://blog.fpmurphy.com/2011/04/gnome-3-shell-extensions.html
 
+### Examples
+- https://developer.gnome.org/gnome-devel-demos/stable/js.html.en
+
 ### Documentation
 - http://mathematicalcoffee.blogspot.de/2012/09/gnome-shell-javascript-source.html
 - http://www.roojs.com/seed/gir-1.2-gtk-3.0/gjs/Gtk.html
