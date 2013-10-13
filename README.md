@@ -12,6 +12,8 @@ gignx
 ## Sources
 
 ### Get startet
+
+- [Development Environment](https://wiki.gnome.org/DeveloperTools/Installation)
 - https://wiki.gnome.org/GnomeShell/Extensions
 - http://www.linuxuser.co.uk/tutorials/build-extensions-for-the-gnome-desktop-environment
 - https://wiki.gnome.org/GnomeShell/Extensions/StepByStepTutorial
