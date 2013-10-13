@@ -24,3 +24,6 @@ gignx
 
 ### Debugging
 - https://wiki.gnome.org/GnomeShell/Debugging
+
+### Gjs
+- https://wiki.gnome.org/Gjs
