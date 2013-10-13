@@ -17,6 +17,7 @@ gignx
 - https://wiki.gnome.org/GnomeShell/Extensions/StepByStepTutorial
 - http://stackoverflow.com/questions/13107743/documentation-for-writing-gnome-shell-extensions
 - http://blog.fpmurphy.com/2011/04/gnome-3-shell-extensions.html
+- http://mathematicalcoffee.blogspot.de/2012/09/gnome-shell-extensions-getting-started.html
 
 ### Examples
 - https://developer.gnome.org/gnome-devel-demos/stable/js.html.en
