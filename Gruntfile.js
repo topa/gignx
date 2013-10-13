@@ -15,12 +15,18 @@ module.exports = function(grunt) {
                 command: 'cp ./extension/* ' + installDir,
                 options: shellDefaultOptions
             }
+        }         ,
+        jasmine_node: {
+
         }
     });
 
     grunt.loadNpmTasks('grunt-shell');
+    grunt.loadNpmTasks('grunt-jasmine-node');
 
     // Default task(s).
     grunt.registerTask('install', ['shell:mkdir', 'shell:copy']);
+
+    grunt.registerTask('test', ['jasmine_node']);
 
 };

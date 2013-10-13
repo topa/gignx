@@ -3,6 +3,8 @@
   "version": "0.0.1",
   "devDependencies": {
     "grunt": "*",
-    "grunt-shell": "*"
+    "grunt-shell": "*",
+    "jasmine-node": "*",
+    "grunt-jasmine-node": "*"
   }
 }
