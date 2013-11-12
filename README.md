@@ -33,3 +33,6 @@ gignx
 
 ### Gjs
 - https://wiki.gnome.org/Gjs
+
+### Soup
+- https://developer.gnome.org/libsoup/stable/libsoup-client-howto.html
