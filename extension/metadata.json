@@ -1,1 +1,6 @@
-{"shell-version": ["3.6.3.1"], "uuid": "gignx@gignx", "name": "gignx", "description": ""}
+{
+    "shell-version": ["3.8.4"],
+    "uuid": "gignx@peerigon.com",
+    "name": "gignx",
+    "description": "GitHub Notifications"
+}
