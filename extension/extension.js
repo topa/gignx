@@ -2,11 +2,15 @@
 const St = imports.gi.St;
 const Main = imports.ui.main;
 const Tweener = imports.ui.tweener;
+const PopupMenu = imports.ui.popupMenu;
 
 const gignx = imports.misc.extensionUtils.getCurrentExtension();
 const GitHubAPI = gignx.imports.lib.GitHub.API;
+const GitHubNotificationOverview = gignx.imports.lib.GitHub.NotificationOverView;
 
 let notification, text, button, buttonIcon;
+
+let notificationOverView;
 
 function _hideNotification() {
     Main.uiGroup.remove_actor(notification);
@@ -63,12 +67,17 @@ function init() {
 
     button.set_child(buttonIcon);
     button.connect('button-press-event', _getNotifications);
+
+//    notificationOverView = new GitHubNotificationOverview();
+//    notificationOverView.actor.connect('button-press-event', _getNotifications);
 }
 
 function enable() {
     Main.panel._rightBox.insert_child_at_index(button, 0);
+//    Main.panel._rightBox.insert_child_at_index(notificationOverView, 0);
 }
 
 function disable() {
     Main.panel._rightBox.remove_child(button);
+//    Main.panel._rightBox.remove_child(notificationOverView);
 }
