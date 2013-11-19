@@ -6,7 +6,7 @@ const Tweener = imports.ui.tweener;
 const gignx = imports.misc.extensionUtils.getCurrentExtension();
 const GitHubAPI = gignx.imports.lib.GitHub.API;
 
-let notification, text, button;
+let notification, text, button, buttonIcon;
 
 function _hideNotification() {
     Main.uiGroup.remove_actor(notification);
@@ -56,10 +56,12 @@ function init() {
         x_fill: true,
         y_fill: false,
         track_hover: true });
-    let icon = new St.Icon({ icon_name: 'system-run-symbolic',
-        style_class: 'system-status-icon' });
 
-    button.set_child(icon);
+    buttonIcon = new St.Icon({
+        style_class: 'github-icon-inverse'
+    });
+
+    button.set_child(buttonIcon);
     button.connect('button-press-event', _getNotifications);
 }
 

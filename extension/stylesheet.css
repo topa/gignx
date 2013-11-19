@@ -1,0 +1,11 @@
+.github-icon {
+    background-image: url("icons/github-icon.png");
+    width: 16px;
+    height: 16px;
+}
+
+.github-icon-inverse {
+    background-image: url("icons/github-icon-inverse.png");
+    width: 16px;
+    height: 16px;
+}
