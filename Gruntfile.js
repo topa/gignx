@@ -12,7 +12,7 @@ module.exports = function(grunt) {
                 options: shellDefaultOptions
             },
             copy: {
-                command: 'cp ./extension/* ' + installDir,
+                command: 'cp -r ./extension/* ' + installDir,
                 options: shellDefaultOptions
             }
         }         ,
