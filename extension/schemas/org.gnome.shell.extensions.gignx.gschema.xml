@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schemalist gettext-domain="gnome-shell-extensions">
+    <schema path="/org/gnome/shell/extensions/gignx/" id="org.gnome.shell.extensions.gignx">
+        <key type="b" name="use-auto-refresh-switch">
+            <default>true</default>
+            <summary>Enable/disable auto-refresh</summary>
+            <description>Whether notifications should be fetched automatically from GitHub.</description>
+        </key>
+        <key type="i" name="auto-refresh-interval">
+            <default>25</default>
+            <range min="1" max="1440"/>
+            <summary>Auto-Refresh-Interval</summary>
+            <description>Interval in which notifications will be fetched from GitHub.</description>
+        </key>
+        <key type="s" name="github-api-authentication-token">
+            <default>""</default>
+            <summary>Your private GitHub Authentication token</summary>
+            <description>Your private GitHub Authentication token to access GitHub's API.</description>
+        </key>
+    </schema>
+</schemalist>
