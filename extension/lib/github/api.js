@@ -1,20 +1,10 @@
 
 const Lang = imports.lang;
-
 const Soup = imports.gi.Soup;
 
-const St = imports.gi.St;
-const PanelMenu = imports.ui.panelMenu;
-const PopupMenu = imports.ui.popupMenu;
+const GitHubAPIURL = "https://api.github.com";
 
-const Gettext = imports.gettext;
-
-const ExtensionSystem = imports.ui.extensionSystem;
-
-
-
-const APIURL = "https://api.github.com";
-const API = new Lang.Class({
+const GitHubAPI = new Lang.Class({
 
     Name: 'GitHubAPI',
 
@@ -34,7 +24,7 @@ const API = new Lang.Class({
     _access_token: "",
 
     getNotifications: function (callback) {
-        let url = APIURL+"/notifications";
+        let url = GitHubAPIURL+"/notifications";
         // @see http://developer.github.com/v3/activity/notifications/
         let params = {
             access_token: this._access_token//,
@@ -65,44 +55,6 @@ const API = new Lang.Class({
         let parsedResponse = JSON.parse(message.response_body.data);
 
         return parsedResponse;
-    }
-
-});
-
-
-
-const NotficationCollection = new Lang.Class({
-
-    Name: "GitHubNotficationCollection",
-    Extends: Array
-
-});
-
-const NotificationView = new Lang.Class({
-
-    Name: "GitHubNotificationView"
-
-});
-
-const NotificationOverView = new Lang.Class({
-
-    Name: "GitHubNotificationOverView",
-    Extends: PanelMenu.Button,
-
-    _init: function () {
-        global.log("Einfach eine Zeile 1");
-        this.parent(0.0);
-
-        global.log("Einfach eine Zeile 2");
-
-        this._label = new St.Label({
-            style_class: 'github-icon-inverse',
-            text: Gettext.gettext("gignx")
-        });
-//        this.actor.add_child(this._label);
-
-        this._myMenu = new PopupMenu.PopupMenuItem(Gettext.gettext('HelloWorld MenuItem'));
-        this.menu.addMenuItem(this._myMenu);
     }
 
 });

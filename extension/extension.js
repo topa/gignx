@@ -1,83 +1,71 @@
 
-const St = imports.gi.St;
 const Main = imports.ui.main;
-const Tweener = imports.ui.tweener;
-const PopupMenu = imports.ui.popupMenu;
+const IconTheme = imports.gi.Gtk.IconTheme;
 
 const gignx = imports.misc.extensionUtils.getCurrentExtension();
-const GitHubAPI = gignx.imports.lib.GitHub.API;
-const GitHubNotificationOverview = gignx.imports.lib.GitHub.NotificationOverView;
 
-let notification, text, button, buttonIcon;
+////////////
+// GitHub //
+////////////
+const libGithub = gignx.imports.lib.github;
+const GitHubAPI = libGithub.api.GitHubAPI;
+const GitHubNotificationPanelMenuButton = libGithub.notification.GitHubNotificationPanelMenuButton;
+const GitHubNotificationPopupMenuItem = libGithub.notification.GitHubNotificationPopupMenuItem;
 
-let notificationOverView;
+let gitHubNotificationPanelMenuButton;
+let gitHubApi;
 
-function _hideNotification() {
-    Main.uiGroup.remove_actor(notification);
-    notification = null;
-}
-
-function _getNotifications() {
-    let monitor = Main.layoutManager.primaryMonitor;
-    let api = new GitHubAPI("INSERT API KEY HERE");
-
-    api.getNotifications(function (error, response) {
-        let text;
-
-        if (!notification) {
-
-            if (error) {
-                text = error;
-            } else {
-                text = JSON.stringify(response[0].subject.title);
-            }
-
-            notification = new St.Label({
-                style_class: 'helloworld-label',
-                text: text
-            });
-            Main.uiGroup.add_actor(notification);
-
+let dummyData = [
+    {
+        "subject": {
+            "title": "Greetings",
+            "url": "https://api.github.com/repos/pengwynn/octokit/issues/123",
+            "latest_comment_url": "https://api.github.com/repos/pengwynn/octokit/issues/comments/123",
+            "type": "Issue"
         }
-        notification.opacity = 255;
+    }
+];
 
-        notification.set_position(Math.floor(monitor.width / 2 - notification.width / 2),
-            Math.floor(monitor.height / 2 - notification.height / 2));
 
-        Tweener.addTween(notification, {
-            opacity: 0,
-            time: 2,
-            transition: 'easeOutQuad',
-            onComplete: _hideNotification
-        });
-    });
+/**
+ * @param {null|Error} error
+ * @param {Array.<{}>} notifications
+ */
+function onNotificationsFetched(error, notifications) {
+    let notification, gitHubNotificationPopupMenuItem, i;
+
+    if (error) {
+        global.log("Can't fetch notifications: "+error);
+    } else {
+        for (i = 0; notifications.length > i; i++) {
+            notification = notifications[i];
+
+            global.log("notifications-"+i+":", notification.subject.title, notification.subject.url);
+
+            gitHubNotificationPopupMenuItem = new GitHubNotificationPopupMenuItem(notification);
+            gitHubNotificationPanelMenuButton.menu.addMenuItem(gitHubNotificationPopupMenuItem);
+        }
+    }
 }
 
-function init() {
-    button = new St.Bin({ style_class: 'panel-button',
-        reactive: true,
-        can_focus: true,
-        x_fill: true,
-        y_fill: false,
-        track_hover: true });
 
-    buttonIcon = new St.Icon({
-        style_class: 'github-icon-inverse'
-    });
+function init(extensionMeta) {
+    let iconTheme = IconTheme.get_default();
+    iconTheme.append_search_path(extensionMeta.path + "/icons");
 
-    button.set_child(buttonIcon);
-    button.connect('button-press-event', _getNotifications);
+    gitHubApi = new GitHubAPI("Pass API-Toke here");
 
-//    notificationOverView = new GitHubNotificationOverview();
-//    notificationOverView.actor.connect('button-press-event', _getNotifications);
+    gitHubNotificationPanelMenuButton = new GitHubNotificationPanelMenuButton();
+    gitHubNotificationPanelMenuButton.menu.addMenuItem(new GitHubNotificationPopupMenuItem(dummyData[0]));
+//    gitHubNotificationPanelMenuButton.actor.connect("button-press-event", function () {
+//        gitHubApi.getNotifications(onNotificationsFetched);
+//    });
 }
 
 function enable() {
-    Main.panel._rightBox.insert_child_at_index(button, 0);
-//    Main.panel._rightBox.insert_child_at_index(notificationOverView, 0);
+    Main.panel.addToStatusArea("gignx-github-notification-overview", gitHubNotificationPanelMenuButton);
 }
 
 function disable() {
-    Main.panel._rightBox.remove_child(button);
-//    Main.panel._rightBox.remove_child(notificationOverView);
+    gitHubNotificationPanelMenuButton.destroy();
 }
