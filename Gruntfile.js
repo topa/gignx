@@ -11,6 +11,10 @@ module.exports = function(grunt) {
                 command: 'mkdir ' + installDir,
                 options: shellDefaultOptions
             },
+            compileSchema: {
+                command: 'glib-compile-schemas extension/schemas/',
+                options: shellDefaultOptions
+            },
             copy: {
                 command: 'cp -r ./extension/* ' + installDir,
                 options: shellDefaultOptions
@@ -25,7 +29,7 @@ module.exports = function(grunt) {
     grunt.loadNpmTasks('grunt-jasmine-node');
 
     // Default task(s).
-    grunt.registerTask('install', ['shell:mkdir', 'shell:copy']);
+    grunt.registerTask('install', ['shell:mkdir', 'shell:compileSchema', 'shell:copy']);
 
     grunt.registerTask('test', ['jasmine_node']);
 
