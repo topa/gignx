@@ -14,25 +14,32 @@ let gitHubNotifications;
 let gitHubApi;
 
 /**
+ * @param {Error|null} error
+ * @param notifications
+ */
+function onNotificationsFetched(error, notifications) {
+    if (error) {
+        //@TODO error handling
+        global.log(new Date().toString(), error);
+    } else {
+        global.log(new Date().toString(), notifications);
+        gitHubNotifications.addEntries(notifications);
+    }
+}
+
+/**
  * @param {{}} extensionMeta
  */
 function init(extensionMeta) {
     let iconTheme = IconTheme.get_default();
     iconTheme.append_search_path(extensionMeta.path + "/icons");
 
-    gitHubApi = new GitHubAPI("Insert API token here.");
+    gitHubApi = new GitHubAPI("Insert API Token here");
     gitHubNotifications = new GitHubNotifications();
 
-    // fetch initially notifications
-    gitHubApi.getNotifications(function (error, notifications) {
-        if (error) {
-            //@TODO error handling
-            global.log(error);
-        } else {
-            global.log(notifications);
-            gitHubNotifications.addEntries(notifications);
-        }
-    });
+    // Fetches initially all notifications and then every 25 Minutes
+    // gitHubApi.getNotifications(onNotificationsFetched, 25 * 60 * 1000);
+    gitHubApi.getNotifications(onNotificationsFetched);
 }
 
 function enable() {
@@ -41,4 +48,5 @@ function enable() {
 
 function disable() {
     gitHubNotifications.destroy();
+    gitHubApi.stopAllAutoRefreshLoops();
 }
