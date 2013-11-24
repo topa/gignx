@@ -32,6 +32,11 @@ const GitHubNotifications = new Lang.Class({
     entries: [],
 
     /**
+     * @type {Array.<number>}
+     */
+    entryIds: [],
+
+    /**
      * @param {string?} nameText optional, default "GitHub Notifications"
      * @param {number?} arrowAlignment optional, default 0.25
      * @param {number?} arrowSide optional, default St.Side.TOP
@@ -63,12 +68,29 @@ const GitHubNotifications = new Lang.Class({
      * @returns {GitHubNotifications}
      */
     addEntry: function (notification) {
+        let newEntryId = parseInt(notification.id, 10);
         let newEntry = new GitHubNotificationPopupMenuItem(notification);
 
         newEntry.connect("activate", Lang.bind(notification, this.openNotificationInDefaultBrowser));
-        this._popupMenu.addMenuItem(newEntry);
+
+        if (this.isNewEntry(newEntryId)) {
+            this.entryIds.push(newEntryId);
+            this.entries.push(newEntry);
+
+            this._popupMenu.addMenuItem(newEntry);
+        }
 
         return this;
+    },
+
+    /**
+     * @param {number} potentialNewEntryId
+     * @returns {boolean}
+     */
+    isNewEntry: function (potentialNewEntryId) {
+        let isNew = this.entryIds.indexOf(potentialNewEntryId) === -1;
+
+        return isNew;
     },
 
     /**
@@ -95,16 +117,10 @@ const GitHubNotifications = new Lang.Class({
     },
 
     /**
-     * @param {{}?} notification optional if a notification was bound
+     * @TODO
      */
-    openNotificationInDefaultBrowser: function (notification) {
-        let url;
-
-        if (notification) {
-            url = notification.subject.url;
-        } else {
-            url = this.subject.url;
-        }
+    openNotificationInDefaultBrowser: function () {
+        let url = this.subject.latest_comment_url.replace("api.", "").replace("repos/", "");
 
         Gio.app_info_launch_default_for_uri(url, global.create_app_launch_context());
     }
