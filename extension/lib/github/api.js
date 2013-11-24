@@ -40,13 +40,14 @@ const GitHubAPI = new Lang.Class({
         let message = Soup.form_request_new_from_hash('GET', url, params);
 
         this._httpSession.queue_message(message, Lang.bind(this, function (session, message) {
-            let parsedResponse;
+            let parsedResponse, error;
 
             if (message.status_code == Soup.KnownStatusCode.OK) {
                 parsedResponse = this._parseResponse(message);
                 callback(null, parsedResponse);
             } else {
-                callback(message.status_code);
+                error = this._createAPICallError("GET", message.status_code);
+                callback(error);
             }
         }));
     },
@@ -55,6 +56,24 @@ const GitHubAPI = new Lang.Class({
         let parsedResponse = JSON.parse(message.response_body.data);
 
         return parsedResponse;
+    },
+
+    /**
+     * @param {string} method
+     * @param {number|string} statusCode
+     * @returns {Error}
+     * @protected
+     */
+    _createAPICallError: function (method, statusCode) {
+        let error;
+
+        switch(method) {
+            case "GET":
+                error = new Error("Could not fetch data. API responded with "+statusCode+".");
+                break;
+        }
+
+        return error;
     }
 
 });
