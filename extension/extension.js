@@ -16,11 +16,13 @@ let gitHubApi;
 //////////////
 // Settings //
 //////////////
-const Convenience = Me.imports.convenience;
+const Convenience = gignx.imports.convenience;
 let settings = Convenience.getSettings();
 let authenticationToken = settings.get_string("github-api-authentication-token");
 let isAutoRefreshEnabled = settings.get_boolean("enable-auto-refresh");
-let autoRefreshInterval = settings.get_value("auto-refresh-interval");
+let autoRefreshInterval = parseInt(settings.get_int("auto-refresh-interval") * 60 * 1000, 10);
+
+
 
 /**
  * @param {Error|null} error
@@ -43,10 +45,15 @@ function init(extensionMeta) {
     let iconTheme = IconTheme.get_default();
     iconTheme.append_search_path(extensionMeta.path + "/icons");
 
-    gitHubApi = new GitHubAPI();
-    gitHubNotifications = new GitHubNotifications(authenticationToken);
+    gitHubApi = new GitHubAPI(authenticationToken);
+    gitHubNotifications = new GitHubNotifications();
 
-    gitHubApi.getNotifications(onNotificationsFetched, isAutoRefreshEnabled ? autoRefreshInterval : null);
+    if (isAutoRefreshEnabled) {
+        gitHubApi.getNotifications(onNotificationsFetched, autoRefreshInterval);
+    } else {
+        gitHubApi.getNotifications(onNotificationsFetched);
+    }
+
 }
 
 function enable() {
