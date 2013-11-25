@@ -7,9 +7,9 @@ const Lang = imports.lang;
 /**
  * @type {Lang.Class}
  */
-let _Settings = new Lang.Class({
+let _PrefSchema = new Lang.Class({
 
-    Name: "Settings",
+    Name: "_PrefSchema",
     Extends: Gio.Settings,
 
     /**
@@ -82,4 +82,4 @@ let _Settings = new Lang.Class({
 
 });
 
-const Settings = new _Settings();
+const PrefSchema = new _PrefSchema();
