@@ -13,6 +13,15 @@ const GitHubNotifications = libGithub.notifications.GitHubNotifications;
 let gitHubNotifications;
 let gitHubApi;
 
+//////////////
+// Settings //
+//////////////
+const Convenience = Me.imports.convenience;
+let settings = Convenience.getSettings();
+let authenticationToken = settings.get_string("github-api-authentication-token");
+let isAutoRefreshEnabled = settings.get_boolean("enable-auto-refresh");
+let autoRefreshInterval = settings.get_value("auto-refresh-interval");
+
 /**
  * @param {Error|null} error
  * @param notifications
@@ -34,11 +43,10 @@ function init(extensionMeta) {
     let iconTheme = IconTheme.get_default();
     iconTheme.append_search_path(extensionMeta.path + "/icons");
 
-    gitHubApi = new GitHubAPI("Insert API Token here");
-    gitHubNotifications = new GitHubNotifications();
+    gitHubApi = new GitHubAPI();
+    gitHubNotifications = new GitHubNotifications(authenticationToken);
 
-    // Fetches initially all notifications and then every 25 Minutes
-    // gitHubApi.getNotifications(onNotificationsFetched, 25 * 60 * 1000);
+    gitHubApi.getNotifications(onNotificationsFetched, isAutoRefreshEnabled ? autoRefreshInterval : null);
 }
 
 function enable() {
