@@ -39,7 +39,6 @@ function init(extensionMeta) {
 
     // Fetches initially all notifications and then every 25 Minutes
     // gitHubApi.getNotifications(onNotificationsFetched, 25 * 60 * 1000);
-    gitHubApi.getNotifications(onNotificationsFetched);
 }
 
 function enable() {

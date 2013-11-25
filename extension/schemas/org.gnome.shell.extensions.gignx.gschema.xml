@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <schemalist gettext-domain="gnome-shell-extensions">
     <schema path="/org/gnome/shell/extensions/gignx/" id="org.gnome.shell.extensions.gignx">
-        <key type="b" name="use-auto-refresh-switch">
+        <key type="b" name="enable-auto-refresh">
             <default>true</default>
             <summary>Enable/disable auto-refresh</summary>
             <description>Whether notifications should be fetched automatically from GitHub.</description>
