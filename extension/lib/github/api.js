@@ -97,7 +97,7 @@ const GitHubAPI = new Lang.Class({
                 parsedResponse = this._parseResponse(message.response_body.data);
                 callback(null, parsedResponse);
             } else {
-                error = this._createAPICallError("GET", message.status_code);
+                error = this._createAPICallError(message);
                 callback(error);
             }
         }));
@@ -115,21 +115,13 @@ const GitHubAPI = new Lang.Class({
     },
 
     /**
-     * @param {string} method
-     * @param {number|string} statusCode
-     * @returns {Error}
+     * @param {{}} message
      * @protected
      */
-    _createAPICallError: function (method, statusCode) {
-        let error;
+    _createAPICallError: function (message) {
+        var statusCode = message.status_code;
 
-        switch(method) {
-            case "GET":
-                error = new Error("Could not fetch data. API responded with "+statusCode+".");
-                break;
-        }
-
-        return error;
+        return new Error("(gignx) "+statusCode+": "+message.response_body.data);
     },
 
     stopAllAutoRefreshLoops: function () {
