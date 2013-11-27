@@ -37,10 +37,13 @@ function onNotificationsFetched(error, notifications) {
  * @param {{}} extensionMeta
  */
 function init(extensionMeta) {
-    let autoRefreshInterval = PrefsSchema.isAutoRefresh() ? (PrefsSchema.getAutoRefreshInterval() * 60 * 1000) : null;
     let iconTheme = IconTheme.get_default();
 
     iconTheme.append_search_path(extensionMeta.path + "/icons");
+}
+
+function enable() {
+    let autoRefreshInterval = PrefsSchema.isAutoRefresh() ? (PrefsSchema.getAutoRefreshInterval() * 60 * 1000) : null;
 
     gitHubApi = new GitHubAPI(PrefsSchema.getAccessToken());
     gitHubNotifications = new GitHubNotifications();
@@ -48,9 +51,7 @@ function init(extensionMeta) {
     if (PrefsSchema.getAccessToken()) {
         gitHubApi.getNotifications(onNotificationsFetched, autoRefreshInterval);
     }
-}
 
-function enable() {
     Main.panel.addToStatusArea("gignx-github-notification-overview", gitHubNotifications);
 }
 
