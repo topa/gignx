@@ -36,3 +36,6 @@ gignx
 
 ### Soup
 - https://developer.gnome.org/libsoup/stable/libsoup-client-howto.html
+
+### St
+- https://developer.gnome.org/st/3.10/
