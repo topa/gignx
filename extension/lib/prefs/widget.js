@@ -4,6 +4,7 @@ const Gtk = imports.gi.Gtk;
 const Lang = imports.lang;
 
 /**
+ * @param {PrefsSchema} PrefsSchema
  * @type {GObject.Class}
  * @constructor
  */
@@ -34,7 +35,6 @@ const PrefsWidget = new GObject.Class({
     },
 
     /**
-     *
      * @param {PrefsSchema} PrefsSchema
      * @protected
      */
@@ -64,7 +64,11 @@ const PrefsWidget = new GObject.Class({
 
         // update
         switcher.connect("notify::active", function () {
-            PrefsSchema.isAutoRefresh(switcher.get_active());
+            if(switcher.get_active()) {
+                PrefsSchema.enableAutoRefresh();
+            } else {
+                PrefsSchema.disableAutoRefresh();
+            }
         });
 
         box.add(label);
@@ -87,11 +91,11 @@ const PrefsWidget = new GObject.Class({
         let spinButton = new Gtk.SpinButton();
         spinButton.set_range(1, 120);
         spinButton.set_increments(1, 5);
-        spinButton.set_value(PrefsSchema.autoRefreshInterval());
+        spinButton.set_value(PrefsSchema.getAutoRefreshInterval());
 
         // update
         spinButton.connect("value-changed", function () {
-            PrefsSchema.autoRefreshInterval(spinButton.get_value());
+            PrefsSchema.setAutoRefreshInterval(spinButton.get_value());
         });
 
         box.add(label);
@@ -113,10 +117,10 @@ const PrefsWidget = new GObject.Class({
             xalign: 0
         });
         let entry = new Gtk.Entry({
-            text: PrefsSchema.accessToken()
+            text: PrefsSchema.getAccessToken()
         });
         entry.connect("changed", function () {
-            PrefsSchema.accessToken(entry.get_text());
+            PrefsSchema.setAccessToken(entry.get_text());
         });
 
         box.add(label);
