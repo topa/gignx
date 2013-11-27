@@ -68,16 +68,19 @@ const GitHubNotifications = new Lang.Class({
      * @returns {GitHubNotifications}
      */
     addEntry: function (notification) {
-        let newEntryId = parseInt(notification.id, 10);
-        let newEntry = new GitHubNotificationPopupMenuItem(notification);
+        let entryId = parseInt(notification.id, 10);
+        let entry = new GitHubNotificationPopupMenuItem(notification);
 
-        newEntry.connect("activate", Lang.bind(notification, this.openNotificationInDefaultBrowser));
+        if (this.isNewEntry(entryId)) {
+            this.entryIds.push(entryId);
+            this.entries.push(entry);
 
-        if (this.isNewEntry(newEntryId)) {
-            this.entryIds.push(newEntryId);
-            this.entries.push(newEntry);
+            entry.connect("activate", Lang.bind(this, function () {
+                this.openNotificationInDefaultBrowser(notification);
+                this.detstroyEntry(entryId)
+            }));
 
-            this._popupMenu.addMenuItem(newEntry);
+            this._popupMenu.addMenuItem(entry);
 
             this.updateEntryCount();
         }
@@ -111,18 +114,47 @@ const GitHubNotifications = new Lang.Class({
     },
 
     /**
-     * @param {string} event e.g. "button-press-event"
-     * @param {function}
+     * @param entryId
+     * @returns {GitHubNotificationPopupMenuItem|*}
      */
-    connect: function (event, handler) {
-        this.actor.connect(event, handler);
+    getEntry: function (entryId) {
+        let entryIndex = this.entryIds.indexOf(entryId);
+
+        return this.entries[entryIndex];
+    },
+
+    /**
+     * @param entryId
+     */
+    detstroyEntry: function (entryId) {
+        let entry = this.getEntry(entryId);
+        let entryIndex = this.entryIds.indexOf(entryId);
+
+        this.entries.splice(entryIndex, 1);
+        this.entryIds.splice(entryIndex, 1);
+
+        entry.destroy();
+
+        this.updateEntryCount();
     },
 
     /**
      * @TODO
      */
-    openNotificationInDefaultBrowser: function () {
-        let url = this.subject.latest_comment_url.replace("api.", "").replace("repos/", "");
+    openNotificationInDefaultBrowser: function (notification) {
+        let url;
+        let latest_comment_url;
+
+        switch (notification.subject.type) {
+            case "Issue":
+                latest_comment_url = notification.subject.latest_comment_url.split("/");
+                url = notification.subject.url.replace("api.", "").replace("repos/", "") + "#issuecomment-" +
+                    latest_comment_url[latest_comment_url.length - 1];
+                break;
+            case "Commit":
+                url = notification.subject.url.replace("api.", "").replace("repos/", "").replace("commits", "commit");
+                break;
+        }
 
         Gio.app_info_launch_default_for_uri(url, global.create_app_launch_context());
     },
