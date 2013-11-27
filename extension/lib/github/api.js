@@ -14,6 +14,7 @@ const GitHubAPI = new Lang.Class({
     Name: 'GitHubAPI',
 
     /**
+     * @see http://developer.github.com/v3/#user-agent-required
      * @param {string} access_token
      * @protected
      */
@@ -21,6 +22,7 @@ const GitHubAPI = new Lang.Class({
         this._access_token = access_token;
 
         this._httpSession = new Soup.SessionAsync(this._httpSessionOptions);
+        this._httpSession.user_agent = "topa-gignx";
         Soup.Session.prototype.add_feature.call(this._httpSession, new Soup.ProxyResolverDefault());
     },
 
