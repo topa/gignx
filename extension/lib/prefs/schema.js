@@ -42,42 +42,60 @@ let _PrefsSchema = new Lang.Class({
     },
 
     /**
-     * @param {string?} accessToken
+     * @param {string} accessToken
+     * @returns {_PrefsSchema}
+     */
+    setAccessToken: function (accessToken) {
+        this.set_string("github-api-access-token", accessToken);
+        return this;
+    },
+
+    /**
      * @returns {string}
      */
-    accessToken: function (accessToken) {
-        if (accessToken) {
-            this.set_string("github-api-access-token", accessToken);
-        } else {
-            return this.get_string("github-api-access-token");
-        }
+    getAccessToken: function () {
+        return this.get_string("github-api-access-token");
     },
 
     /**
-     * @param {boolean?} isAutoRefresh
+     * @returns {_PrefsSchema}
+     */
+    enableAutoRefresh: function () {
+        this.set_boolean("is-auto-refresh", true);
+        return this;
+    },
+
+    /**
+     * @returns {_PrefsSchema}
+     */
+    disableAutoRefresh: function () {
+        this.set_boolean("is-auto-refresh", false);
+        return this;
+    },
+
+    /**
      * @returns {boolean}
      */
-    isAutoRefresh: function (isAutoRefresh) {
-        if (typeof isAutoRefresh == "boolean") {
-            this.set_boolean("is-auto-refresh", isAutoRefresh);
-        } else {
-            return this.get_boolean("is-auto-refresh");
-        }
+    isAutoRefresh: function () {
+        return this.get_boolean("is-auto-refresh");
     },
 
     /**
-     * If used as setter given value will be parsed as Integer.
+     * Given value will be parsed as Integer.
      *
      * @param {number?} autoRefreshInterval
      * @returns {number} minutes
      */
-    autoRefreshInterval: function(autoRefreshInterval) {
-        if (autoRefreshInterval) {
-            autoRefreshInterval = parseInt(autoRefreshInterval, 10);
-            this.set_int("auto-refresh-interval", autoRefreshInterval);
-        } else {
-            return this.get_int("auto-refresh-interval");
-        }
+    setAutoRefreshInterval: function(autoRefreshInterval) {
+        autoRefreshInterval = parseInt(autoRefreshInterval, 10);
+        this.set_int("auto-refresh-interval", autoRefreshInterval);
+    },
+
+    /**
+     * @returns {number}
+     */
+    getAutoRefreshInterval: function () {
+        return this.get_int("auto-refresh-interval");
     }
 
 });

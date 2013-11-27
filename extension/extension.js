@@ -37,15 +37,15 @@ function onNotificationsFetched(error, notifications) {
  * @param {{}} extensionMeta
  */
 function init(extensionMeta) {
-    let autoRefreshInterval = PrefsSchema.isAutoRefresh() ? (PrefsSchema.autoRefreshInterval() * 60 * 1000) : null;
+    let autoRefreshInterval = PrefsSchema.isAutoRefresh() ? (PrefsSchema.getAutoRefreshInterval() * 60 * 1000) : null;
     let iconTheme = IconTheme.get_default();
 
     iconTheme.append_search_path(extensionMeta.path + "/icons");
 
-    gitHubApi = new GitHubAPI(PrefsSchema.accessToken());
+    gitHubApi = new GitHubAPI(PrefsSchema.getAccessToken());
     gitHubNotifications = new GitHubNotifications();
 
-    if (PrefsSchema.accessToken()) {
+    if (PrefsSchema.getAccessToken()) {
         gitHubApi.getNotifications(onNotificationsFetched, autoRefreshInterval);
     }
 }
