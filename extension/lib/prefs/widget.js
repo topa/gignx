@@ -109,7 +109,7 @@ const PrefsWidget = new GObject.Class({
         let box = new Gtk.Box(this._defaultPrefParams);
         // @TODO Create a link to https://github.com/settings/applications
         let label = new Gtk.Label({
-            label: "Personal Access Tokens",
+            label: "Personal Access Token",
             xalign: 0
         });
         let entry = new Gtk.Entry({
