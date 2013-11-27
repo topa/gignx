@@ -45,7 +45,13 @@ const GitHubNotificationPanelMenuButton = new Lang.Class({
      */
     _initIconActor: function () {
         this._iconActor = new St.Icon(this._iconActorDefaultSettings);
-        this.actor.add_actor(this._iconActor);
+        this.label = new St.Label({text: "0", style_class: "notification-count-label"});
+
+        this.stBoxLayout = new St.BoxLayout({style_class: "notification-count-box"});
+        this.stBoxLayout.add(this._iconActor);
+        this.stBoxLayout.add(this.label);
+
+        this.actor.add_actor(this.stBoxLayout);
     }
 
 });

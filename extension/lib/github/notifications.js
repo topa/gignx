@@ -78,6 +78,8 @@ const GitHubNotifications = new Lang.Class({
             this.entries.push(newEntry);
 
             this._popupMenu.addMenuItem(newEntry);
+
+            this.updateEntryCount();
         }
 
         return this;
@@ -123,6 +125,10 @@ const GitHubNotifications = new Lang.Class({
         let url = this.subject.latest_comment_url.replace("api.", "").replace("repos/", "");
 
         Gio.app_info_launch_default_for_uri(url, global.create_app_launch_context());
+    },
+
+    updateEntryCount: function () {
+        this.label.text = ""+this.entries.length;
     }
 
 });

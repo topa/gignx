@@ -9,3 +9,21 @@
     width: 16px;
     height: 16px;
 }
+
+.notification-count-box {
+    /*background-image: url("icons/github-icon-inverse.png");*/
+    /*width: 16px;*/
+    /*height: 16px;*/
+}
+
+.notification-count-label {
+    font-size: 10px;
+    /*color: rgb(65, 131, 196);*/
+    /*font-weight: bold;*/
+    padding-top: 12px;
+    /*margin-left: 12px;*/
+}
+
+.notification-count-box .notification-count-label {
+
+}
