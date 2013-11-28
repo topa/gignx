@@ -29,7 +29,7 @@ const LoopTask = new Lang.Class({
 
     /**
      * @param {number} interval
-     * @param {function} task
+     * @param {function(): boolean} task
      * @protected
      */
     _init: function (interval, task) {
@@ -46,7 +46,20 @@ const LoopTask = new Lang.Class({
             if (executeImmediately) {
                 this.task();
             }
-            this._loopId = Mainloop.timeout_add(this.interval, this.task);
+            this._loopId = Mainloop.timeout_add(this.interval, Lang.bind(this, function () {
+                var returnValue = this.task();
+
+                if (!returnValue) {
+                    this.stop();
+                    throw new Error(
+                        "(LoopTask) Given task returned "+returnValue+". But task should return "+
+                            "true if task had succeeded or false if task had failed."
+                    );
+                }
+
+                return returnValue;
+            }));
+
             this.isRunning = true;
         }
 
