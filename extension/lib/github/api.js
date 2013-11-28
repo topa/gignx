@@ -53,7 +53,7 @@ const GitHubAPI = new Lang.Class({
 
     /**
      * @param {function(Error|null, Array.<{}>?)} callback
-     * @param {{all: boolean, participating: boolean, since: string}?} params optional
+     * @param {{}} params optional {access_token: string, all: boolean, participating: boolean, since: string}
      */
     getNotifications: function (callback, params) {
         let url = GitHubAPIURL+"/notifications";
