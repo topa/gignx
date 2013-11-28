@@ -19,7 +19,7 @@ const LoopRegistry = new Lang.Class({
 
     /**
      * @param {number} interval
-     * @param {function} task
+     * @param {function(): boolean} task
      * @param {boolean?} executeImmediately optional, if true task will be executed immediately
      * @returns {LoopTask}
      */
