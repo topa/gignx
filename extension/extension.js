@@ -31,6 +31,7 @@ let loopRegistry;
 function init(extensionMeta) {
     let iconTheme;
     let autoRefreshInterval;
+    let getNotificationParams = {};
 
     iconTheme = IconTheme.get_default();
     iconTheme.append_search_path(extensionMeta.path + "/icons");
@@ -56,7 +57,9 @@ function init(extensionMeta) {
 
     function fetchNotificationsTask() {
         if (PrefsSchema.getAccessToken()) {
-            gitHubApi.getNotifications(onNotificationsFetched);
+            gitHubApi.getNotifications(onNotificationsFetched, getNotificationParams);
+            // Omit notifications which were already fetched
+            getNotificationParams.since = new Date().toISOString();
         }
         return true;
     }
