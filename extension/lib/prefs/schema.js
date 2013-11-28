@@ -3,7 +3,6 @@ const Gio = imports.gi.Gio;
 const GioSSS = Gio.SettingsSchemaSource;
 const ExtensionUtils = imports.misc.extensionUtils;
 const Lang = imports.lang;
-const Signals = imports.signals;
 
 /**
  * @type {Lang.Class}
@@ -48,7 +47,6 @@ let _PrefsSchema = new Lang.Class({
      */
     setAccessToken: function (accessToken) {
         this.set_string("github-api-access-token", accessToken);
-        this.emit("change", "accessToken");
         return this;
     },
 
@@ -64,7 +62,6 @@ let _PrefsSchema = new Lang.Class({
      */
     enableAutoRefresh: function () {
         this.set_boolean("is-auto-refresh", true);
-        this.emit("change", "autoRefresh");
         return this;
     },
 
@@ -73,7 +70,6 @@ let _PrefsSchema = new Lang.Class({
      */
     disableAutoRefresh: function () {
         this.set_boolean("is-auto-refresh", false);
-        this.emit("change", "autoRefresh");
         return this;
     },
 
@@ -93,7 +89,6 @@ let _PrefsSchema = new Lang.Class({
     setAutoRefreshInterval: function(autoRefreshInterval) {
         autoRefreshInterval = parseInt(autoRefreshInterval, 10);
         this.set_int("auto-refresh-interval", autoRefreshInterval);
-        this.emit("change", "autoRefreshInterval");
     },
 
     /**
@@ -104,7 +99,5 @@ let _PrefsSchema = new Lang.Class({
     }
 
 });
-
-Signals.addSignalMethods(_PrefsSchema.prototype);
 
 const PrefsSchema = new _PrefsSchema();
