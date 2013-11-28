@@ -1,7 +1,6 @@
 
 const Lang = imports.lang;
 const Soup = imports.gi.Soup;
-const Mainloop = imports.mainloop;
 
 const GitHubAPIURL = "https://api.github.com";
 
@@ -47,15 +46,9 @@ const GitHubAPI = new Lang.Class({
     _access_token: "",
 
     /**
-     * @type {*|null}
-     */
-    getNotificationsLoop: null,
-
-    /**
      * @param {function(Error|null, Array.<{}>?)} callback
-     * @param {number?} autoRefreshInterval optional
      */
-    getNotifications: function (callback, autoRefreshInterval) {
+    getNotifications: function (callback) {
         let url = GitHubAPIURL+"/notifications";
         // @see http://developer.github.com/v3/activity/notifications/
         let params = {
@@ -65,22 +58,7 @@ const GitHubAPI = new Lang.Class({
 //            since: "2012-10-09T23:39:01Z"
         };
 
-        if (autoRefreshInterval) {
-            if (this.getNotificationsLoop) {
-                Mainloop.source_remove(this.getNotificationsLoop);
-            }
-
-            this.getNotificationsLoop = Mainloop.timeout_add(autoRefreshInterval, Lang.bind(this, function () {
-                this._get(url, params, callback);
-                params.since = new Date().toISOString();
-
-                return true;
-            }));
-        }
-
         this._get(url, params, callback);
-        // This will persist in getNotificationsLoop
-        params.since = new Date().toISOString();
     },
 
     /**
@@ -124,10 +102,6 @@ const GitHubAPI = new Lang.Class({
         var statusCode = message.status_code;
 
         return new Error("(gignx) "+statusCode+": "+message.response_body.data);
-    },
-
-    stopAllAutoRefreshLoops: function () {
-        Mainloop.source_remove(this.getNotificationsLoop);
     }
 
 });
