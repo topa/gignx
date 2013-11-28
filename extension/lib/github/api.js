@@ -1,6 +1,7 @@
 
 const Lang = imports.lang;
 const Soup = imports.gi.Soup;
+const parseParams = imports.misc.params.parse;
 
 const GitHubAPIURL = "https://api.github.com";
 
@@ -11,19 +12,6 @@ const GitHubAPIURL = "https://api.github.com";
 const GitHubAPI = new Lang.Class({
 
     Name: 'GitHubAPI',
-
-    /**
-     * @see http://developer.github.com/v3/#user-agent-required
-     * @param {string} access_token
-     * @protected
-     */
-    _init: function (access_token) {
-        this._access_token = access_token;
-
-        this._httpSession = new Soup.SessionAsync(this._httpSessionOptions);
-        this._httpSession.user_agent = "topa-gignx";
-        Soup.Session.prototype.add_feature.call(this._httpSession, new Soup.ProxyResolverDefault());
-    },
 
     /**
      * @type {Soup.SessionAsync}
@@ -40,23 +28,37 @@ const GitHubAPI = new Lang.Class({
     },
 
     /**
-     * @type {string}
+     * @see http://developer.github.com/v3/activity/notifications/#parameters
+     * @type {{access_token: string, all: boolean, participating: boolean, since: string}}
+     */
+    _getNotificationsDefaultParams: {
+        access_token: "",
+        all: false,
+        participating: false,
+        since: ""
+    },
+
+    /**
+     * @see http://developer.github.com/v3/#user-agent-required
+     * @param {string} access_token
      * @protected
      */
-    _access_token: "",
+    _init: function (access_token) {
+        this._getNotificationsDefaultParams.access_token = access_token;
+
+        this._httpSession = new Soup.SessionAsync(this._httpSessionOptions);
+        this._httpSession.user_agent = "topa-gignx";
+        Soup.Session.prototype.add_feature.call(this._httpSession, new Soup.ProxyResolverDefault());
+    },
 
     /**
      * @param {function(Error|null, Array.<{}>?)} callback
+     * @param {{all: boolean, participating: boolean, since: string}} params
      */
-    getNotifications: function (callback) {
+    getNotifications: function (callback, params) {
         let url = GitHubAPIURL+"/notifications";
-        // @see http://developer.github.com/v3/activity/notifications/
-        let params = {
-            access_token: this._access_token//,
-//            all: "1",
-//            participating: true,
-//            since: "2012-10-09T23:39:01Z"
-        };
+
+        params = parseParams(params, this._getNotificationsDefaultParams, true);
 
         this._get(url, params, callback);
     },
@@ -68,7 +70,10 @@ const GitHubAPI = new Lang.Class({
      * @protected
      */
     _get: function (url, params, callback) {
-        let message = Soup.form_request_new_from_hash('GET', url, params);
+        let message;
+
+        params = this._prepareParams(params);
+        message = Soup.form_request_new_from_hash('GET', url, params);
 
         this._httpSession.queue_message(message, Lang.bind(this, function (session, message) {
             let parsedResponse, error;
@@ -81,6 +86,31 @@ const GitHubAPI = new Lang.Class({
                 callback(error);
             }
         }));
+    },
+
+    /**
+     * @param {{}} params
+     * @returns {{}}
+     * @protected
+     */
+    _prepareParams: function (params) {
+        let param, typeofParam, paramName;
+        let parsedParams = {};
+
+        for (paramName in params) {
+            param = params[paramName];
+            typeofParam = typeof param;
+
+            if (typeofParam === "boolean") {
+                param = param ? "1" : "0";
+            }
+
+            if (param) {
+                parsedParams[paramName] = param;
+            }
+        }
+
+        return parsedParams;
     },
 
     /**
