@@ -54,14 +54,15 @@ function init(extensionMeta) {
         }
     }
 
-    function fetchNotifications() {
+    function fetchNotificationsTask() {
         if (PrefsSchema.getAccessToken()) {
             gitHubApi.getNotifications(onNotificationsFetched);
         }
+        return true;
     }
 
     loopRegistry = new LoopRegistry();
-    loopRegistry.add(autoRefreshInterval, fetchNotifications, true);
+    loopRegistry.add(autoRefreshInterval, fetchNotificationsTask, true);
 }
 
 function enable() {
