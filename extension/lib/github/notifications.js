@@ -32,11 +32,6 @@ const GitHubNotifications = new Lang.Class({
     entries: [],
 
     /**
-     * @type {Array.<number>}
-     */
-    entryIds: [],
-
-    /**
      * @param {string?} nameText optional, default "GitHub Notifications"
      * @param {number?} arrowAlignment optional, default 0.25
      * @param {number?} arrowSide optional, default St.Side.TOP
@@ -68,16 +63,15 @@ const GitHubNotifications = new Lang.Class({
      * @returns {GitHubNotifications}
      */
     addEntry: function (notification) {
-        let entryId = parseInt(notification.id, 10);
-        let entry = new GitHubNotificationPopupMenuItem(notification);
+        let entryId = notification.id;
 
         if (this.isNewEntry(entryId)) {
-            this.entryIds.push(entryId);
+            let entry = new GitHubNotificationPopupMenuItem(notification);
             this.entries.push(entry);
 
             entry.connect("activate", Lang.bind(this, function () {
                 this.openNotificationInDefaultBrowser(notification);
-                this.detstroyEntry(entryId)
+                this.destroyEntry(entryId);
             }));
 
             this._popupMenu.addMenuItem(entry);
@@ -89,13 +83,11 @@ const GitHubNotifications = new Lang.Class({
     },
 
     /**
-     * @param {number} potentialNewEntryId
+     * @param {number|string} potentialNewEntryId
      * @returns {boolean}
      */
     isNewEntry: function (potentialNewEntryId) {
-        let isNew = this.entryIds.indexOf(potentialNewEntryId) === -1;
-
-        return isNew;
+        return this.getEntry(potentialNewEntryId) === null;
     },
 
     /**
@@ -103,43 +95,48 @@ const GitHubNotifications = new Lang.Class({
      * @returns {GitHubNotifications}
      */
     addEntries: function (notificationCollection) {
-        let notifiation, i;
+        let notification, i;
 
         for (i = 0; notificationCollection.length > i; i++) {
-            notifiation = notificationCollection[i];
-            this.addEntry(notifiation);
+            notification = notificationCollection[i];
+            this.addEntry(notification);
         }
 
         return this;
     },
 
     /**
-     * @param entryId
-     * @returns {GitHubNotificationPopupMenuItem|*}
+     * @param {number|string} entryId
+     * @returns {GitHubNotificationPopupMenuItem|null}
      */
     getEntry: function (entryId) {
-        let entryIndex = this.entryIds.indexOf(entryId);
-
-        return this.entries[entryIndex];
+        for (let i = 0; this.entries.length > i; i++) {
+            if (this.entries[i].notification.id == entryId) {
+                return this.entries[i];
+            }
+        }
+        return null;
     },
 
     /**
      * @param entryId
      */
-    detstroyEntry: function (entryId) {
+    destroyEntry: function (entryId) {
         let entry = this.getEntry(entryId);
-        let entryIndex = this.entryIds.indexOf(entryId);
-
-        this.entries.splice(entryIndex, 1);
-        this.entryIds.splice(entryIndex, 1);
+        let entryIndex = this.entries.indexOf(entry);
 
         entry.destroy();
+        this.entries.splice(entryIndex, 1);
 
         this.updateEntryCount();
+
+        if (this.entries.length === 0) {
+            this._popupMenu.close();
+        }
     },
 
     /**
-     * @TODO
+     * @param {{}} notification
      */
     openNotificationInDefaultBrowser: function (notification) {
         let url;
