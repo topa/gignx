@@ -14,13 +14,15 @@ const LoopTask = new Lang.Class({
 
     /**
      * @type {number}
+     * @protected
      */
-    interval: null,
+    _interval: null,
 
     /**
      * @type (function)
+     * @protected
      */
-    task: null,
+    _task: null,
 
     /**
      * @type {boolean}
@@ -33,8 +35,17 @@ const LoopTask = new Lang.Class({
      * @protected
      */
     _init: function (interval, task) {
-        this.task = task;
-        this.interval = interval;
+
+        if (typeof interval !== "number") {
+            throw new Error("(LoopTask) Can't init LoopTask. Interval is "+typeof interval+", but should be a number.");
+        }
+
+        if (typeof task !== "function") {
+            throw new Error("(LoopTask) Can't init LoopTask. Task is "+typeof task+", but should be function.");
+        }
+
+        this._interval = interval;
+        this._task = task;
     },
 
     /**
@@ -44,10 +55,10 @@ const LoopTask = new Lang.Class({
     start: function (executeImmediately) {
         if (!this._loopId) {
             if (executeImmediately) {
-                this.task();
+                this._task();
             }
-            this._loopId = Mainloop.timeout_add(this.interval, Lang.bind(this, function () {
-                var returnValue = this.task();
+            this._loopId = Mainloop.timeout_add(this._interval, Lang.bind(this, function () {
+                var returnValue = this._task();
 
                 if (!returnValue) {
                     this.stop();
