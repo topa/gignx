@@ -37,9 +37,9 @@ let gitHubApi = null;
 let fetchNotificationsLoopTask;
 
 /**
- * @type {{since: string}}
+ * @type {{since: string}|null}
  */
-let fetchNotificationsParams = { since: "" };
+let fetchNotificationsParams = null;
 
 
 /**
@@ -57,14 +57,20 @@ function init(extensionMeta) {
  * Adds GitHubNotification indicator to panel, fetches initially notifications from GitHub and enables added LoopTasks
  */
 function enable() {
+    fetchNotificationsParams = { since: "" };
+
     _initGitHubNotifications();
     Main.panel.addToStatusArea("gignx-github-notification-overview", gitHubNotifications);
+
     LoopRegistry.startAll();
 }
 
 function disable() {
+    fetchNotificationsParams = null;
+
     gitHubNotifications.destroy();
     gitHubNotifications = null;
+
     LoopRegistry.stopAll();
 }
 
@@ -113,7 +119,6 @@ function _initGitHubNotifications() {
  */
 function _fetchNotificationsTask() {
     gitHubApi.getNotifications(_onNotificationsFetched, fetchNotificationsParams);
-    fetchNotificationsParams.since = new Date().toISOString();
 
     return true;
 }
@@ -128,6 +133,7 @@ function _onNotificationsFetched(error, notifications) {
         global.log("(gignx)", new Date().toString(), "An Error has occurred while fetching notifications:", error);
     } else {
         global.log("(gignx)", new Date().toString(), "Fetched "+notifications.length+" new notifications");
+        fetchNotificationsParams.since = new Date().toISOString();
         gitHubNotifications.addEntries(notifications);
     }
 }
