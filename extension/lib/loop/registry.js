@@ -8,9 +8,9 @@ const LoopTask = Me.imports.lib.loop.task.LoopTask;
  * @type {Lang.Class}
  * @constructor
  */
-const LoopRegistry = new Lang.Class({
+let _LoopRegistry = new Lang.Class({
 
-    "Name": "LoopRegistry",
+    "Name": "_LoopRegistry",
 
     /**
      * @type {Array.<{task: function, interval: number}>}
@@ -78,3 +78,5 @@ const LoopRegistry = new Lang.Class({
     }
 
 });
+
+const LoopRegistry = new _LoopRegistry();
