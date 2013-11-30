@@ -28,6 +28,10 @@ gignx
 - http://mathematicalcoffee.blogspot.de/2012/09/gnome-shell-javascript-source.html
 - http://www.roojs.com/seed/gir-1.2-gtk-3.0/gjs/
 
+
+### Testing
+- https://github.com/magcius/gjs/tree/master/test/js
+
 ### Debugging
 - https://wiki.gnome.org/GnomeShell/Debugging
 
