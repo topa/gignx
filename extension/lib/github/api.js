@@ -6,6 +6,17 @@ const parseParams = imports.misc.params.parse;
 const GitHubAPIURL = "https://api.github.com";
 
 /**
+ * @type {{url: {time: Date, params: {all: boolean, participating: boolean, since: string}}, callback: function}
+ */
+let log = {};
+
+/**
+ *
+ * @type {null|{time: Date, params: {all: boolean, participating: boolean, since: string}, url: string}
+ */
+let lastLogRecord = null;
+
+/**
  * @type {Lang.Class}
  * @constructor
  */
@@ -39,6 +50,12 @@ const GitHubAPI = new Lang.Class({
     },
 
     /**
+     * Time in milliseconds (ms) between to equal requests which must elapse before it request can be send again.
+     * @type {number}
+     */
+    coolDownTime: 1000,
+
+    /**
      * @see http://developer.github.com/v3/#user-agent-required
      * @param {string} access_token
      * @protected
@@ -52,8 +69,16 @@ const GitHubAPI = new Lang.Class({
     },
 
     /**
+     * @returns {{url: {time: Date, params: {all: boolean, participating: boolean, since: string}}}
+     */
+    getLog: function () {
+        let logCopy = parseParams({}, log, true);
+        return logCopy;
+    },
+
+    /**
      * @param {function(Error|null, Array.<{}>?)} callback
-     * @param {{}} params optional {access_token: string, all: boolean, participating: boolean, since: string}
+     * @param {{access_token: string, all: boolean, participating: boolean, since: string}} params optional
      */
     getNotifications: function (callback, params) {
         let url = GitHubAPIURL+"/notifications";
@@ -65,7 +90,7 @@ const GitHubAPI = new Lang.Class({
 
     /**
      * @param {string} url
-     * @param {{}} params
+     * @param {{access_token: string, all: boolean, participating: boolean, since: string}} params
      * @param {function(Error|null, Array.<{}>?)} callback
      * @protected
      */
@@ -74,6 +99,13 @@ const GitHubAPI = new Lang.Class({
 
         params = this._prepareParams(params);
         message = Soup.form_request_new_from_hash('GET', url, params);
+
+        // Prevent sending equal requests before coolDownTime hasn't elapsed
+        if (this._wasRequestAlreadySend(url, params, callback)) {
+            return;
+        }
+
+        this._logRequest(url, params, callback);
 
         this._httpSession.queue_message(message, Lang.bind(this, function (session, message) {
             let parsedResponse, error;
@@ -89,17 +121,16 @@ const GitHubAPI = new Lang.Class({
     },
 
     /**
-     * @param {{}} params
+     * @param {{access_token: string, all: boolean, participating: boolean, since: string}} params
      * @returns {{}}
      * @protected
      */
     _prepareParams: function (params) {
-        let param, typeofParam, paramName;
         let parsedParams = {};
 
-        for (paramName in params) {
-            param = params[paramName];
-            typeofParam = typeof param;
+        for (let paramName in params) {
+            let param = params[paramName];
+            let typeofParam = typeof param;
 
             if (typeofParam === "boolean") {
                 param = param ? "1" : "0";
@@ -132,6 +163,74 @@ const GitHubAPI = new Lang.Class({
         var statusCode = message.status_code;
 
         return new Error("(gignx) "+statusCode+": "+message.response_body.data);
+    },
+
+    /**
+     * Will return true if an equal request was already send before coolDownTime has elapsed.
+     * Otherwise false will be returned.
+     *
+     * @param {string} url
+     * @param {{access_token: string, all: boolean, participating: boolean, since: string}} params
+     * @param {function} callback
+     * @returns {boolean}
+     * @protected
+     */
+    _wasRequestAlreadySend: function (url, params, callback) {
+
+        if (!lastLogRecord) {
+            return false;
+        }
+
+        if (lastLogRecord.url !== url) {
+            return false;
+        }
+
+        if (lastLogRecord.params) {
+            if (lastLogRecord.params.access_token !== params.access_token) {
+                return false;
+            }
+            if (lastLogRecord.params.all !== params.all) {
+                return false;
+            }
+            if (lastLogRecord.params.participating !== params.participating) {
+                return false;
+            }
+            if (lastLogRecord.params.since !== params.since) {
+                return false;
+            }
+        }
+
+        if (lastLogRecord.callback !== callback) {
+            return false;
+        }
+
+        if ((Date.now() - lastLogRecord.time.getTime()) > this.coolDownTime) {
+            return false;
+        }
+
+        return true;
+    },
+
+    /**
+     * @param {string} url
+     * @param {{access_token: string, all: boolean, participating: boolean, since: string}} params
+     * @param {function} callback
+     * @protected
+     */
+    _logRequest: function (url, params, callback) {
+        if (!log[url]) {
+            log[url] = {};
+        }
+        if (params) {
+            // copy params
+            params = parseParams({}, params, true);
+        }
+        log[url].params = params;
+        log[url].callback = callback;
+        log[url].time = new Date();
+
+        lastLogRecord = log[url];
+        lastLogRecord.url = url;
     }
 
 });
