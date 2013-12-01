@@ -1,6 +1,6 @@
 
-const Lang = imports.lang;
-const PopupMenu = imports.ui.popupMenu;
+const Lang = require("lang");
+const PopupMenu = require("ui/popupMenu");
 
 /**
  * @type {Lang.Class}

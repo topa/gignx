@@ -1,8 +1,7 @@
 
-const Lang = imports.lang;
+const Lang = require("lang");
 
-const Me = imports.misc.extensionUtils.getCurrentExtension();
-const LoopTask = Me.imports.lib.loop.task.LoopTask;
+const LoopTask = require("./task/LoopTask");
 
 /**
  * @type {Lang.Class}

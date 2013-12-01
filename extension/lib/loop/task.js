@@ -1,6 +1,6 @@
 
-const Lang = imports.lang;
-const Mainloop = imports.mainloop;
+const Lang = require("lang");
+const Mainloop = require("mainloop");
 
 const LoopTask = new Lang.Class({
 

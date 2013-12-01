@@ -1,25 +1,26 @@
 
-const Main = imports.ui.main;
-const IconTheme = imports.gi.Gtk.IconTheme;
+imports.misc.extensionUtils.getCurrentExtension().imports.require;
 
-const gignx = imports.misc.extensionUtils.getCurrentExtension();
-const lib = gignx.imports.lib;
+const Main = require("ui/main");
+const IconTheme = require("gi/Gtk/IconTheme");
+
 
 ////////////
 // GitHub //
 ////////////
-const GitHubAPI = lib.github.api.GitHubAPI;
-const GitHubNotifications = lib.github.notifications.GitHubNotifications;
+const GitHubAPI = require("./lib/github/api/GitHubAPI");
+const GitHubNotifications = require("./lib/github/notifications/GitHubNotifications");
 
 //////////////
 // Settings //
 //////////////
-const PrefsSchema = lib.prefs.schema.PrefsSchema;
+const PrefsSchema = require("./lib/prefs/schema/PrefsSchema");
 
 ////////////////////
 // handling Loops //
 ////////////////////
-const LoopRegistry = lib.loop.registry.LoopRegistry;
+const LoopRegistry = require("./lib/loop/registry/LoopRegistry");
+
 
 
 /**

@@ -1,8 +1,8 @@
 
-const Gio = imports.gi.Gio;
+const Gio = require("gi/Gio");
 const GioSSS = Gio.SettingsSchemaSource;
-const ExtensionUtils = imports.misc.extensionUtils;
-const Lang = imports.lang;
+const ExtensionUtils = require("misc/extensionUtils");
+const Lang = require("lang");
 
 /**
  * @type {Lang.Class}

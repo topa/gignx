@@ -1,15 +1,12 @@
 
-const Lang = imports.lang;
-const St = imports.gi.St;
-const Gio = imports.gi.Gio;
+const Lang = require("lang");
+const St = require("gi/St");
+const Gio = require("gi/Gio");
 
-const Me = imports.misc.extensionUtils.getCurrentExtension();
-
-let libGithub = Me.imports.lib.github;
-let GitHubAPI = libGithub.api.GitHubAPI;
-let GitHubNotificationPanelMenuButton = libGithub.notificationPanelMenuButton.GitHubNotificationPanelMenuButton;
-let GitHubNotificationPopupMenu = libGithub.notificationPopupMenu.GitHubNotificationPopupMenu;
-let GitHubNotificationPopupMenuItem = libGithub.notificationPopupMenuItem.GitHubNotificationPopupMenuItem;
+let GitHubAPI = require("./api/GitHubAPI");
+let GitHubNotificationPanelMenuButton = require("./notificationPanelMenuButton/GitHubNotificationPanelMenuButton");
+let GitHubNotificationPopupMenu = require("./notificationPopupMenu/GitHubNotificationPopupMenu");
+let GitHubNotificationPopupMenuItem = require("./notificationPopupMenuItem/GitHubNotificationPopupMenuItem");
 
 /**
  * @type {Lang.Class}

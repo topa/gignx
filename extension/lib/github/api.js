@@ -1,7 +1,7 @@
 
-const Lang = imports.lang;
-const Soup = imports.gi.Soup;
-const parseParams = imports.misc.params.parse;
+const Lang = require("lang");
+const Soup = require("gi/Soup");
+const parseParams = require("misc/params/parse");
 
 const GitHubAPIURL = "https://api.github.com";
 

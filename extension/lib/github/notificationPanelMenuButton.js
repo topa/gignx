@@ -1,7 +1,7 @@
 
-const Lang = imports.lang;
-const St = imports.gi.St;
-const PanelMenu = imports.ui.panelMenu;
+const Lang = require("lang");
+const St = require("gi/St");
+const PanelMenu = require("ui/panelMenu");
 
 /**
  * @type {Lang.Class}

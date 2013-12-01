@@ -1,9 +1,8 @@
 
-const gignx = imports.misc.extensionUtils.getCurrentExtension();
-const prefs = gignx.imports.lib.prefs;
+imports.misc.extensionUtils.getCurrentExtension().imports.require;
 
-const PrefsWidget = prefs.widget.PrefsWidget;
-const PrefsSchema = prefs.schema.PrefsSchema;
+const PrefsWidget = require("./lib/prefs/widget/PrefsWidget");
+const PrefsSchema = require("./lib/prefs/schema/PrefsSchema");
 
 function init() {
     //@TODO Init Translation here

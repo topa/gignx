@@ -1,7 +1,7 @@
 
-const GObject = imports.gi.GObject;
-const Gtk = imports.gi.Gtk;
-const Lang = imports.lang;
+const GObject = require("gi/GObject");
+const Gtk = require("gi/Gtk");
+const Lang = require("lang");
 
 /**
  * @param {PrefsSchema} PrefsSchema
@@ -58,9 +58,7 @@ const PrefsWidget = new GObject.Class({
             label: "Enable/Disable Auto-Refresh",
             xalign: 0
         });
-        let switcher = new Gtk.Switch({
-            active: PrefsSchema.isAutoRefresh()
-        });
+        let switcher = new Gtk.Switch({ active: PrefsSchema.isAutoRefresh() });
 
         // update
         switcher.connect("notify::active", function () {
