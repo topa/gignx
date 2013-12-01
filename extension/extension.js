@@ -23,6 +23,11 @@ const LoopRegistry = lib.loop.registry.LoopRegistry;
 
 
 /**
+ * @type {number}
+ */
+let onPrefChangedSignalId;
+
+/**
  * @type {GitHubNotifications|null}
  */
 let gitHubNotifications = null;
@@ -49,8 +54,6 @@ function init(extensionMeta) {
 
     IconTheme.get_default().append_search_path(extensionMeta.path + "/icons");
 
-    PrefsSchema.connect("changed", _initGitHubNotifications);
-
 }
 
 /**
@@ -59,6 +62,7 @@ function init(extensionMeta) {
 function enable() {
     fetchNotificationsParams = { since: "" };
 
+    onPrefChangedSignalId = PrefsSchema.connect("changed", _initGitHubNotifications);
     _initGitHubNotifications();
     Main.panel.addToStatusArea("gignx-github-notification-overview", gitHubNotifications);
 
@@ -67,6 +71,8 @@ function enable() {
 
 function disable() {
     fetchNotificationsParams = null;
+
+    PrefsSchema.disconnect(onPrefChangedSignalId);
 
     gitHubNotifications.destroy();
     gitHubNotifications = null;
